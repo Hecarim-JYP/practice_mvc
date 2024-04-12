@@ -5,8 +5,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -22,4 +25,42 @@ public class RequestParamController {
         response.getWriter().write("OK");
 
     }
+
+    @ResponseBody
+    @RequestMapping("/request-param-v2")
+    public String requestParamV2(
+            @RequestParam("username") String memberName,
+            @RequestParam("age") int memberAge) {
+
+        log.info("username = {}, age = {}", memberName, memberAge);
+        return "OK";
+    }
+
+    @ResponseBody
+    @RequestMapping("/request-param-required")
+    public String requestParamRequired(
+            @RequestParam(value = "username", required = false) String memberName,
+            @RequestParam(value = "age", required = false) Integer memberAge) {
+
+        log.info("username = {}, age = {}", memberName, memberAge);
+        return "OK";
+    }
+
+    @ResponseBody
+    @RequestMapping("/request-param-default")
+    public String requestParamDefault(
+            @RequestParam(value = "username", required = false, defaultValue = "guest") String memberName,
+            @RequestParam(value = "age", required = false, defaultValue = "-1") Integer memberAge) {
+
+        log.info("username = {}, age = {}", memberName, memberAge);
+        return "OK";
+    }
+
+    @ResponseBody
+    @RequestMapping("/request-param-map")
+    public String requestParamMap(@RequestParam Map<String, Object> paramMap) {
+        log.info("username = {}, age = {}", paramMap.get("username"), paramMap.get("age"));
+        return "OK";
+    }
+
 }
